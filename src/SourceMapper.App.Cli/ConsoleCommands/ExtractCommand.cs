@@ -34,8 +34,15 @@ public partial class ExtractCommand : MyCommandBase
     [Option("-p|--proxy", Description = "Proxy URL to use.")]
     private string? Proxy { get; }
 
-    [Option("-h|--header", Description = "A header to send with the request, similar to curl's -H. Can be set multiple times, EG: \"sourcemapper extract --header \"Cookie: session=bar\" --header \"Authorization: blerp\"")]
+    [Option("-h|--header",
+        Description =
+            "A header to send with the request, similar to curl's -H. Can be set multiple times, EG: \"sourcemapper extract --header \"Cookie: session=bar\" --header \"Authorization: blerp\"")]
     private List<string> Headers { get; } = new();
+
+    [Option("-t|--create-top-directory",
+        Description =
+            "Create a top level directory named by the sourceMap file. This is useful when extracting multiple sourceMaps into the same directory.")]
+    private bool CreateTopDirectory { get; }
 
     public System.ComponentModel.DataAnnotations.ValidationResult OnValidate()
     {
@@ -114,6 +121,20 @@ public partial class ExtractCommand : MyCommandBase
             }
         }
 
+        var baseDir = Output;
+        if (CreateTopDirectory)
+        {
+            var filename = Path.GetFileNameWithoutExtension(Url);
+
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                filename = $"sourcemap_{DateTime.Now:yyyyMMdd_HHmmss}";
+                Console.WriteLine($"Failed to parse filename from URL, creating temporary directory {filename}.");
+            }
+
+            baseDir = Path.Join(baseDir, filename);
+        }
+
         for (var i = 0; i < sm.Sources.Count; i++)
         {
             if (cts.IsCancellationRequested)
@@ -127,7 +148,8 @@ public partial class ExtractCommand : MyCommandBase
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 sourcePath = CleanWindows(sourcePath);
 
-            var scriptPath = Path.Join(Output, sourcePath);
+
+            var scriptPath = Path.Join(baseDir, sourcePath);
             var scriptData = sm.SourcesContent[i];
 
             try
