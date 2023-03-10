@@ -31,6 +31,9 @@ csharp_using_directive_placement = outside_namespace
 ## License header
 file_header_template = Copyright (c) Michal Krchnavy. All rights reserved.\nLicensed under the MIT license.See LICENSE file in the project root for full license information.
 
+#constants
+dotnet_naming_style.constant_style.capitalization = all_upper
+
 ## Styling conventions
 
 end_of_line = crlf
