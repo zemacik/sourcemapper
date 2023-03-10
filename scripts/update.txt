@@ -1,0 +1,2 @@
+dotnet pack ..\src\SourceMapper.App.Cli
+dotnet tool update --global --add-source ..\src\SourceMapper.App.Cli\nupkg SourceMapper.App.Cli
