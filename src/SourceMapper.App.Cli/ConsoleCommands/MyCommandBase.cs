@@ -5,34 +5,60 @@ using McMaster.Extensions.CommandLineUtils;
 
 namespace SourceMapper.App.Cli.ConsoleCommands;
 
+/// <summary>
+/// The base class for all commands.
+/// </summary>
 public abstract class MyCommandBase
 {
     private readonly IConsole _console;
 
+    /// <summary>
+    /// The output directory.
+    /// </summary>
     [Option("-o|--output", Description = "The output directory.")]
     protected string Output { get; } = null!;
 
+    /// <summary>
+    /// If set, invalid TLS certificates will be ignored.
+    /// </summary>
     [Option("-i|--ignore-certificate-errors", Description = "Ignore invalid TLS certificates.")]
     protected bool Insecure { get; }
 
+    /// <summary>
+    /// The proxy URL to use.
+    /// </summary>
     [Option("-p|--proxy", Description = "Proxy URL to use.")]
     protected string? Proxy { get; }
 
+    /// <summary>
+    /// Allows setting a header to send with the request, similar to curl's -H.
+    /// </summary>
     [Option("-h|--header",
         Description =
             "A header to send with the request, similar to curl's -H. Can be set multiple times, EG: \"sourcemapper extract --header \"Cookie: session=bar\" --header \"Authorization: blerp\"")]
     protected List<string> Headers { get; } = new();
 
+    /// <summary>
+    /// Create a top level directory named by the sourceMap file. This is useful when extracting multiple sourceMaps into the same directory.
+    /// </summary>
     [Option("-t|--create-top-directory",
         Description =
             "Create a top level directory named by the sourceMap file. This is useful when extracting multiple sourceMaps into the same directory.")]
     protected bool CreateTopDirectory { get; }
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="MyCommandBase"/> class.
+    /// </summary>
+    /// <param name="console">The console.</param>
     protected MyCommandBase(IConsole console)
     {
         _console = console;
     }
 
+    /// <summary>
+    /// Validates the command.
+    /// </summary>
+    /// <returns>Vaidation result.</returns>
     protected virtual System.ComponentModel.DataAnnotations.ValidationResult OnValidate()
     {
         if (string.IsNullOrEmpty(Output))
@@ -43,6 +69,9 @@ public abstract class MyCommandBase
         return System.ComponentModel.DataAnnotations.ValidationResult.Success!;
     }
 
+    /// <summary>
+    /// Writes header text to the console.
+    /// </summary>
     protected void ShowHeader()
     {
         _console.WriteLine("SourceMapper.App.Cli");
@@ -50,6 +79,17 @@ public abstract class MyCommandBase
         _console.WriteLine();
     }
 
+
+    /// <summary>
+    /// Method tries to get remote content and returns the content or error message.
+    /// </summary>
+    /// <param name="source">The source URL.</param>
+    /// <param name="headers">The headers.</param>
+    /// <param name="insecureTls">If set to <c>true</c> [insecure TLS].</param>
+    /// <param name="proxyUri">The proxy URI.</param>
+    /// <param name="mediaType">The media type.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The content or error message.</returns>
     protected async Task<(string? content, string? errorMessage)> TryGetRemoteContent(
         string source,
         string[] headers,
@@ -69,6 +109,17 @@ public abstract class MyCommandBase
         }
     }
 
+    /// <summary>
+    /// Gets the remote content from the specified url.
+    /// </summary>
+    /// <param name="source">The source URL.</param>
+    /// <param name="headers">The headers.</param>
+    /// <param name="insecureTls">If set to <c>true</c> [insecure TLS].</param>
+    /// <param name="proxyUri">The proxy URI.</param>
+    /// <param name="mediaType">The media type.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The content or error message.</returns>
+    /// <returns>The content.</returns>
     protected async Task<string> GetRemoteContent(string source,
         string[] headers,
         bool insecureTls,

@@ -2,6 +2,9 @@
 
 namespace SourceMapper.App.Cli.ConsoleCommands;
 
+/// <summary>
+/// Command to extract maps from a given URLs.
+/// </summary>
 [Command(Name = COMMAND_NAME)]
 public class ExtractCommand : MyCommandBase
 {
@@ -9,17 +12,28 @@ public class ExtractCommand : MyCommandBase
 
     private readonly IConsole _console;
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="ExtractCommand"/> class.
+    /// </summary>
+    /// <param name="console">The console.</param>
     public ExtractCommand(IConsole console)
         : base(console)
     {
         _console = console;
     }
 
+    /// <summary>
+    /// The URLs to the source map files.
+    /// </summary>
     [Option("-mu|--map-url",
         Description =
             "The URL to the source map file. Can be set multiple times, EG: \"sourcemapper extract --map-url https://example.com/sourcemap1.js.map --map-url https://example.com/sourcemap2.css.map")]
     private List<string> Urls { get; } = new();
 
+    /// <summary>
+    /// Validates the command.
+    /// </summary>
+    /// <returns>The validation result.</returns>
     protected override System.ComponentModel.DataAnnotations.ValidationResult OnValidate()
     {
         var baseValidate = base.OnValidate();
@@ -33,6 +47,9 @@ public class ExtractCommand : MyCommandBase
         return System.ComponentModel.DataAnnotations.ValidationResult.Success;
     }
 
+    /// <summary>
+    /// Executes the command.
+    /// </summary>
     protected async Task OnExecute()
     {
         ShowHeader();

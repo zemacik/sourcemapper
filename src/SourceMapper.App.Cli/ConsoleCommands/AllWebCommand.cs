@@ -9,6 +9,9 @@ using SourceMapper.App.Cli.Helpers;
 
 namespace SourceMapper.App.Cli.ConsoleCommands;
 
+/// <summary>
+/// Command to extract all source files and maps from a web page.
+/// </summary>
 [Command(Name = COMMAND_NAME)]
 public class AllWebCommand : MyCommandBase
 {
@@ -16,18 +19,32 @@ public class AllWebCommand : MyCommandBase
 
     private readonly IConsole _console;
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="AllWebCommand"/> class.
+    /// </summary>
+    /// <param name="console">The console.</param>
     public AllWebCommand(IConsole console)
         : base(console)
     {
         _console = console;
     }
 
+    /// <summary>
+    /// The URL to the web page.
+    /// </summary>
     [Option("-u|--url", Description = "The URL to the web page.")]
     private string Url { get; } = null!;
 
+    /// <summary>
+    /// If set, the source files will be extracted.
+    /// </summary>
     [Option("-e|--extract", Description = "Extract the source maps.")]
     private bool Extract { get; }
 
+    /// <summary>
+    /// Validates the command.
+    /// </summary>
+    /// <returns>The validation result.</returns>
     protected override System.ComponentModel.DataAnnotations.ValidationResult OnValidate()
     {
         var baseValidate = base.OnValidate();
@@ -43,6 +60,9 @@ public class AllWebCommand : MyCommandBase
         return System.ComponentModel.DataAnnotations.ValidationResult.Success!;
     }
 
+    /// <summary>
+    /// Executes the command.
+    /// </summary>
     protected async Task OnExecute()
     {
         ShowHeader();

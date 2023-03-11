@@ -1,5 +1,9 @@
 ﻿namespace SourceMapper.App.Cli.Models;
 
+/// <summary>
+/// The SourceMap class represents a sourcemap structure.
+/// This class is used for deserializing the sourcemap from JSON.
+/// </summary>
 public class SourceMap
 {
     public int Version { get; set; }

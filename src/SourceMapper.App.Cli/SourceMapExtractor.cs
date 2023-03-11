@@ -1,7 +1,4 @@
-﻿// Copyright (c) Michal Krchnavy. All rights reserved.
-// Licensed under the MIT license.See LICENSE file in the project root for full license information.
-
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
@@ -11,8 +8,20 @@ using SourceMapper.App.Cli.Models;
 
 namespace SourceMapper.App.Cli;
 
+/// <summary>
+/// The SourceMapExtractor class is responsible for extracting the source files from a sourcemap.
+/// </summary>
 public class SourceMapExtractor
 {
+    /// <summary>
+    /// Extracts the source files from a sourcemap.
+    /// </summary>
+    /// <param name="doc">The sourcemap document.</param>
+    /// <param name="url">The URL of the sourcemap.</param>
+    /// <param name="outputPath">The output path.</param>
+    /// <param name="createTopDirectory">Whether to create a top directory for the extracted files (like the filename of the sourcemap).</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>True if the extraction was successful, false otherwise.</returns>
     public static async Task<bool> Extract(
         string doc,
         string url,
@@ -92,6 +101,11 @@ public class SourceMapExtractor
         return false;
     }
 
+    /// <summary>
+    /// Writes a file asynchronously.
+    /// </summary>
+    /// <param name="filepath">The path to the file.</param>
+    /// <param name="content">The content to write.</param>
     private static async Task WriteFileAsync(string filepath, string content)
     {
         var directory = Path.GetDirectoryName(filepath);
@@ -104,10 +118,14 @@ public class SourceMapExtractor
         await File.WriteAllTextAsync(filepath, content);
     }
 
-    // cleanWindows replaces the illegal characters from a path with "-".
-    private static string CleanWindows(string p)
+    /// <summary>
+    /// Sanitizes a path for Windows.
+    /// </summary>
+    /// <param name="path">The path to sanitize.</param>
+    /// <returns>The sanitized path.</returns>
+    private static string CleanWindows(string path)
     {
         var illegalChars = new Regex("[?%*|:\"<>]");
-        return illegalChars.Replace(p, "-");
+        return illegalChars.Replace(path, "-");
     }
 }
