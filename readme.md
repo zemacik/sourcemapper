@@ -21,7 +21,7 @@ Before you begin, ensure you have met the following requirements:
         dotnet --version
         ```
 
-## Installation
+## Build
 
 To install and run this project, follow these steps:
 
@@ -39,18 +39,16 @@ To install and run this project, follow these steps:
     dotnet build
     ```
 
-## Usage
-
-### Installation
+### Pack and install
 
 To use this project acts as dotnet global tool, follow these steps:
 
-1. Navigate to the solution folder 'src'.
+1. Navigate to the project root folder.
 2. Install the tool by running the following command:
 
     ```
-    dotnet pack ..\src\SourceMapper -c Release -o nupkg
-    dotnet tool install --global --add-source ..\src\SourceMapper\nupkg SourceMapper.App.CLI
+    dotnet pack src\SourceMapper.App.Cli -c Release -o nupkg
+    dotnet tool install --global --add-source nupkg SourceMapper.App.CLI
     ```
 
 3. Run the application by running the following command for the first time:
@@ -65,8 +63,8 @@ To use this project acts as dotnet global tool, follow these steps:
 2. Update the tool by running the following command:
 
     ```
-    dotnet pack ..\src\SourceMapper -c Release -o nupkg
-    dotnet tool update --global --add-source ..\src\SourceMapper\nupkg SourceMapper.App.CLI
+    dotnet pack src\SourceMapper.App.Cli -c Release -o nupkg
+    dotnet tool update --global --add-source nupkg SourceMapper.App.CLI   
     ```
 
 3. Run the application by running the following command for the first time:
@@ -75,13 +73,71 @@ To use this project acts as dotnet global tool, follow these steps:
     sourcemapper --help
     ```
 
+
 ## Command-line usage
 
-TODO
+Command `sourcemapper --help`:
+```
+Usage: sourcemapper [command] [options]
 
-## Components
+Options:
+  -?|-h|--help  Show help information.
 
-TODO
+Commands:
+  all
+  extract
+
+Run 'sourcemapper [command] -?|-h|--help' for more information about a command.
+```
+
+Command `sourcemapper all --help`:
+```
+Usage: sourcemapper all [options]
+
+Options:
+  -u|--url                        The URL to the web page.
+  -e|--extract                    Extract the source maps.
+  -o|--output                     The output directory.
+  -i|--ignore-certificate-errors  Ignore invalid TLS certificates.
+  -p|--proxy                      Proxy URL to use.
+  -h|--header                     A header to send with the request, similar to curl's -H. Can be set multiple times,
+                                  EG: "sourcemapper extract --header "Cookie: session=bar" --header "Authorization:
+                                  blerp"
+  -t|--create-top-directory       Create a top level directory named by the sourceMap file. This is useful when
+                                  extracting multiple sourceMaps into the same directory.
+  -?|--help                       Show help information.
+```
+
+Command `sourcemapper extract --help`:
+```
+Usage: sourcemapper extract [options]
+
+Options:
+  -mu|--map-url                   The URL to the source map file. Can be set multiple times, EG: "sourcemapper extract
+                                  --map-url https://example.com/sourcemap1.js.map --map-url https://example.com/sourcemap2.css.map
+  -o|--output                     The output directory.
+  -i|--ignore-certificate-errors  Ignore invalid TLS certificates.
+  -p|--proxy                      Proxy URL to use.
+  -h|--header                     A header to send with the request, similar to curl's -H. Can be set multiple times,
+                                  EG: "sourcemapper extract --header "Cookie: session=bar" --header "Authorization:
+                                  blerp"
+  -t|--create-top-directory       Create a top level directory named by the sourceMap file. This is useful when
+                                  extracting multiple sourceMaps into the same directory.
+  -?|--help                       Show help information.
+```
+
+## Sample usage
+
+To download all the linked filesm and extract source maps from the given URL, run the following command:
+```
+sourcemapper all --url https://[URL_TO_DOWNLOAD] --output c:\temp\ --create-top-directory --extract
+```
+
+To download and extract concrete source maps from the given URL, run the following command:
+
+```
+sourcemapper extract --map-url https://[URL]/[file1].map --map-url https://[URL]/[file2].map --output c:\temp\ --create-top-directory
+```
 
 ## License
 

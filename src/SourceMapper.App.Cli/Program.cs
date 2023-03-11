@@ -4,7 +4,7 @@ using SourceMapper.App.Cli.ConsoleCommands;
 
 [HelpOption("-?| -h | --help")]
 [Command(Name = "sourcemapper"),
- Subcommand(typeof(ExtractCommand))]
+ Subcommand(typeof(ExtractCommand), typeof(AllWebCommand))]
 internal class Program
 {
     private const string DEFAULT_COMMAND = ExtractCommand.COMMAND_NAME;
