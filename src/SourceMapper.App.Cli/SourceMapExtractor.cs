@@ -113,6 +113,20 @@ public class SourceMapExtractor
         if (directory != null && !Directory.Exists(directory))
             Directory.CreateDirectory(directory);
 
+        // check if file exists, and if so, append a number to the filename before the extension
+        if (File.Exists(filepath))
+        {
+            var filename = Path.GetFileNameWithoutExtension(filepath);
+            var extension = Path.GetExtension(filepath);
+
+            var i = 1;
+            while (File.Exists(filepath))
+            {
+                filepath = Path.Join(directory, $"{filename}_{i}{extension}");
+                i++;
+            }
+        }
+
         Console.WriteLine("Creating {0}.", filepath);
 
         await File.WriteAllTextAsync(filepath, content);
